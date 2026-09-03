@@ -1,0 +1,8 @@
+# Core data + backtesting
+pandas>=2.0
+requests>=2.28
+vectorbt>=0.26
+
+# Charting (plot_round writes both interactive HTML and static PNGs)
+plotly>=5.18
+kaleido>=0.2.1
