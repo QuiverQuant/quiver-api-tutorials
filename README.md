@@ -11,23 +11,27 @@ Every script here is the complete, runnable code behind a tutorial on [quiverqua
 | Script | Dataset | Tutorial | Headline result |
 | --- | --- | --- | --- |
 | [`strategies/insider_buying_monthly.py`](strategies/insider_buying_monthly.py) | [Insider Trading](https://www.quiverquant.com/insiders/) (SEC Form 4) | [Testing Five Trading Strategies Built on Insider Buying](https://www.quiverquant.com/tutorial/insiderbuyingstrategy/) | Insider dollar value + a 200-day uptrend filter returned **+78.5%** vs **+57.3%** for buy-and-hold (Aug 2021 – Aug 2026), with a shallower drawdown |
+| [`strategies/revolving_door_lobbying.py`](strategies/revolving_door_lobbying.py) | [Corporate Lobbying](https://www.quiverquant.com/lobbying/), [Government Contracts](https://www.quiverquant.com/govcontracts/), Revolving Door and Historical Daily Prices (all Hobbyist tier) | [Building a Trading Strategy on the Change in a Company's Revolving-Door Lobbyist Hires](https://www.quiverquant.com/tutorials/revolving-door-lobbying/) | Rising revolving-door hires, restricted to federal contractors, returned **+410%** vs **+192%** for buy-and-hold (Mar 2017 – Sep 2026), Sharpe 1.13; the static "most connected" ranking and the unconnected heavy-spender control both lost to the market |
 
 ## Getting started
 
-You'll need a [Quiver API key](https://api.quiverquant.com/pricing/) and a price data source. Note that dataset access varies by plan tier — each script's docstring says what it needs.
+You'll need a [Quiver API key](https://api.quiverquant.com/pricing/). Dataset access varies by plan tier, and some scripts also need a separate price data source — each script's docstring says exactly what it needs. The revolving-door script runs on a Hobbyist key alone, using Quiver's Historical Daily Prices endpoint.
 
 ```bash
-git clone https://github.com/QuiverQuant/quiver-strategies.git
-cd quiver-strategies
+git clone https://github.com/QuiverQuant/quiver-api-tutorials.git
+cd quiver-api-tutorials
 
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
 export QUIVER_API_KEY="your_key_here"
-export POLYGON_API_KEY="your_key_here"     # price data
+export POLYGON_API_KEY="your_key_here"     # price data, only for scripts that say they need it
 
 python strategies/insider_buying_monthly.py
+python strategies/revolving_door_lobbying.py
 ```
+
+Scripts that use `django-environ` will also pick the key up from a `.env` file at the repo root (`quiver_api_key=your_key_here`), which is git-ignored, so you can skip the `export` if you prefer.
 
 New to the API? Start with the [Quiver API setup guide](https://www.quiverquant.com/api-setup/), which walks through getting a key and making your first request.
 
