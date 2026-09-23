@@ -11,6 +11,8 @@ venv/
 *.html
 !docs/**/*.html
 *_checkpoint.csv
+*.pkl
+output/
 
 # Environment / secrets
 .env
