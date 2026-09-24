@@ -78,14 +78,6 @@ import requests
 import pandas as pd
 import vectorbt as vbt
 
-# --- Image uploads ---
-# All tutorial images live in one flat S3 folder, so each tutorial gets a
-# unique ID that prefixes its image filenames — this is what keeps
-# insider-buying's round1-equity-curves.png from colliding with some other
-# tutorial's round1-equity-curves.png in that shared folder.
-TUTORIAL_ID = "insider_sep2_2026"
-IMG_BASE = "https://quiver-logos.s3.us-east-2.amazonaws.com/tutorials"
-
 # --- 1. Quiver auth & setup ---
 API_KEY = os.environ["QUIVER_API_KEY"]
 BASE_URL = "https://api.quiverquant.com"
@@ -513,8 +505,7 @@ def run_round(variants, start, label):
 def plot_round(results, title, image_id):
     """One chart, every variant in the round, plus buy-and-hold as a dashed line.
 
-    Writes two files named after `image_id`, which matches the tutorial's
-    <img> placeholder id so uploading them is the only step left:
+    Writes two files named after `image_id`:
       {image_id}.png   — static image for the tutorial (needs `pip install kaleido`)
       {image_id}.html  — the interactive version, if you'd rather embed that
     """
@@ -568,7 +559,7 @@ print(f"\nPortfolio start (shared by all variants and the benchmark): {portfolio
 # 10. Round 1 — the five pre-registered contestants
 # =============================================================================
 round1_results, round1_scorecard = run_round(VARIANTS, portfolio_start, "Round 1")
-plot_round(round1_results, "Five Ways to Trade Insider Buying", f"{TUTORIAL_ID}_round1-equity-curves")
+plot_round(round1_results, "Five Ways to Trade Insider Buying", "round1-equity-curves")
 
 # =============================================================================
 # 11. Round 2 — post-hoc refinements of the Round 1 winner
@@ -594,4 +585,4 @@ ROUND2_VARIANTS = {
     "Uptrend at Entry + Sticky Top-20":   {"rank": rank_by_dollar_value, "uptrend_mode": "entry", "sticky_rank": 20},
 }
 round2_results, round2_scorecard = run_round(ROUND2_VARIANTS, portfolio_start, "Round 2")
-plot_round(round2_results, "Round 2: Refining the Winner (post-hoc)", f"{TUTORIAL_ID}_round2-equity-curves")
+plot_round(round2_results, "Round 2: Refining the Winner (post-hoc)", "round2-equity-curves")
