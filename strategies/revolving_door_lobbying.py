@@ -3,7 +3,7 @@ Tutorial: Building a Trading Strategy on the Change in a Company's
 Revolving-Door Lobbyist Hires
 Built entirely on the Quiver Quantitative API, including daily prices. See
 the accompanying tutorial for a full walkthrough of each section:
-https://www.quiverquant.com/tutorials/revolving-door-lobbying/
+https://www.quiverquant.com/tutorial/revolving-door-lobbying/
 
 THESIS
   Companies that employ more former Hill and agency staff as lobbyists
@@ -96,10 +96,6 @@ env = environ.Env()
 _ENV_FILE = Path(__file__).resolve().parent.parent / ".env"
 if _ENV_FILE.exists():
     environ.Env.read_env(str(_ENV_FILE))
-
-# --- Image uploads: one flat S3 folder, so each tutorial prefixes its images ---
-TUTORIAL_ID = "revolving_door_lobbying_sep2026"
-IMG_BASE = "https://quiver-logos.s3.us-east-2.amazonaws.com/tutorials"
 
 # --- Every file this script writes lands here; the folder is git-ignored ---
 OUTPUT_DIR = Path(__file__).resolve().parent / "output"
@@ -628,7 +624,7 @@ for name, cfg in VARIANTS.items():
     portfolio, holdings_history, avg_turnover, avg_holdings, bench, n_rebal = run_backtest(quals[name], start)
     benchmark = bench if benchmark is None else benchmark
     slug = name.lower().replace(" ", "_").replace("(", "").replace(")", "").replace(",", "")
-    holdings_history.to_csv(out(f"{TUTORIAL_ID}_holdings_{slug}.csv"), index=False)
+    holdings_history.to_csv(out(f"holdings_{slug}.csv"), index=False)
     stats = portfolio.stats()
     benchmark_return = (benchmark.iloc[-1] / benchmark.iloc[0] - 1) * 100
     results[name] = {
@@ -650,7 +646,7 @@ scorecard = pd.DataFrame({k: {kk: vv for kk, vv in v.items() if kk != "portfolio
 pd.set_option("display.width", 200)
 print("\n=== SCORECARD ===")
 print(scorecard.round(2).to_string())
-scorecard.round(4).to_csv(out(f"{TUTORIAL_ID}_scorecard.csv"))
+scorecard.round(4).to_csv(out("scorecard.csv"))
 
 # Calendar-year returns: the shape of an edge matters as much as its size
 yearly = {}
@@ -665,7 +661,7 @@ yearly["Buy & Hold (benchmark)"] = ((yb / prev - 1) * 100).round(1)
 yearly = pd.DataFrame(yearly).T
 print("\n=== CALENDAR-YEAR RETURNS [%] (first and last years partial) ===")
 print(yearly.to_string())
-yearly.to_csv(out(f"{TUTORIAL_ID}_yearly_returns.csv"))
+yearly.to_csv(out("yearly_returns.csv"))
 
 # The thesis, as one number: did adding connections beat lacking them?
 ctrl = scorecard.loc[CONTROL, "Total Return [%]"]
@@ -680,8 +676,7 @@ print(f"  (control returned {ctrl:.1f}%; benchmark {scorecard['Benchmark Return 
 # 10. Chart
 # =============================================================================
 def plot_round(results, title, image_id, benchmark):
-    """Writes {image_id}.png and .html into OUTPUT_DIR; the image_id matches the
-    tutorial's <img> placeholder so uploading is the only step left."""
+    """Writes {image_id}.png and {image_id}.html into OUTPUT_DIR."""
     import plotly.graph_objects as go
     palette = ["#57D7BA", "#999cde", "#f5a623", "#e05a7a", "#4fa3f7", "#c084fc"]
     fig = go.Figure()
@@ -707,5 +702,5 @@ def plot_round(results, title, image_id, benchmark):
 
 
 plot_round(results, "Six Ways to Trade Revolving-Door Connections vs. Buy & Hold",
-           f"{TUTORIAL_ID}_equity-curves", benchmark)
+           "equity-curves", benchmark)
 print(f"\nAll outputs in {OUTPUT_DIR}")
